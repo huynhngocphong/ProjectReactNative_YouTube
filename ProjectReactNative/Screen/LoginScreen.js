@@ -1,5 +1,8 @@
 import React, { useState, createRef } from 'react';
-import { StyleSheet, TextInput, View, Text, ScrollView, Image, Keyboard, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import {
+    StyleSheet, TextInput, View, Text, ScrollView,
+    Image, Keyboard, TouchableOpacity, KeyboardAvoidingView
+} from 'react-native';
 
 import Loader from './Component/Loader';
 
@@ -53,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
                             <TextInput
                                 style={styles.inputStyle}
                                 onChangeText={(UserEmail) => setUserEmail(UserEmail)}
-                                placeholder="Enter Email" //dummy@abc.com
+                                placeholder="Enter Email"
                                 placeholderTextColor="#8b9cb5"
                                 autoCapitalize="none"
                                 keyboardType="email-address"
@@ -69,7 +72,7 @@ const LoginScreen = ({ navigation }) => {
                             <TextInput
                                 style={styles.inputStyle}
                                 onChangeText={(UserPassword) => setUserPassword(UserPassword)}
-                                placeholder="Enter Password" //12345
+                                placeholder="Enter Password"
                                 placeholderTextColor="#8b9cb5"
                                 keyboardType="default"
                                 ref={passwordInputRef}

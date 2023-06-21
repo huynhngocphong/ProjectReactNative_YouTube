@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
+import DrawerNavigatorRoutes from './Screen/DrawerNavigationRoutes';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +34,7 @@ const App = () => {
       <Stack.Navigator initialRouteName='SplashScreen'>
         <Stack.Screen name='SplashScreen' component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Auth' component={Auth} options={{ headerShown: false }} />
+        <Stack.Screen name='DrawerNavigationRoutes' component={DrawerNavigatorRoutes} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
