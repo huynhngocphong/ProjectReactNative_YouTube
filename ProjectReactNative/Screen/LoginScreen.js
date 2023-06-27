@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
         }
         setLoading(true);
         // Move to Home
-        navigation.replace('VideoScreen');
+        navigation.replace('Root');
     };
 
     return (

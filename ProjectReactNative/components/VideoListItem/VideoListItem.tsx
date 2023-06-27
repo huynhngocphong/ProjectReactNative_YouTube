@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo'
+
+import { useNavigation } from '@react-navigation/native';
 
 type VideoListItemProps = {
     video: {
@@ -21,6 +23,9 @@ type VideoListItemProps = {
 
 const VideoListItem = (props: VideoListItemProps) => {
     const { video } = props
+
+    const navigation = useNavigation();
+
     const minutes = Math.floor(video.duration / 60);
     const seconds = video.duration % 60
 
@@ -31,8 +36,12 @@ const VideoListItem = (props: VideoListItemProps) => {
         viewString = (video.views / 1_000).toFixed() + 'k'
     }
 
+    const openVideoPage = () => {
+        navigation.navigate("VideoScreen");
+      };
+
     return (
-        <View style={styles.videoCard}>
+        <Pressable onPress={openVideoPage} style={styles.videoCard}>
             <View>
                 <Image style={styles.thumbnail} source={{ uri: video.thumbnail }}></Image>
                 <View style={styles.timeContainer}>
@@ -48,7 +57,7 @@ const VideoListItem = (props: VideoListItemProps) => {
                 </View>
                 <Icon name="dots-three-vertical" size={18} color="white" />
             </View>
-        </View>
+        </Pressable>
     );
 };
 

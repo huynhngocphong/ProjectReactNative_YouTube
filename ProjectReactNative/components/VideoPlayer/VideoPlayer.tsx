@@ -13,7 +13,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     return (
         <YouTube 
             videoId={videoURI}
-            style={{ alignSelf: 'stretch', height: 300 }}
+            style={{ alignSelf: 'stretch', height: 200 }}
         />
     );
 }

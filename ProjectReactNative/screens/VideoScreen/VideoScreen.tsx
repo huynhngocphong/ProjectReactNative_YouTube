@@ -1,13 +1,27 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image, SafeAreaView, FlatList } from "react-native";
+import React, { useRef, useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Image, SafeAreaView, FlatList, Pressable } from "react-native";
 import Icon from 'react-native-vector-icons/AntDesign'
 
 import video from '../../assets/data/video.json'
 import videos from '../../assets/data/videos.json'
+import comments from '../../assets/data/comments.json'
+
 import VideoListItem from "../../components/VideoListItem/VideoListItem";
 import VideoPlayer from "../../components/VideoPlayer/VideoPlayer";
 
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import BottomSheet from '@gorhom/bottom-sheet'
+import VideoComments from "../../components/VideoComments/VideoComments";
+import VideoComment from "../../components/VideoComment/VideoComment";
+
 const VideoScreen = () => {
+
+    // const [comments, setComments] = useState<Comment[]>([]);
+    const commentsSheetRef = useRef<BottomSheetModal>(null);
+
+    const openComments = () => {
+        commentsSheetRef.current?.present();
+    };
 
     let viewsString = video.views.toString();
     if (video.views > 1_000_000) {
@@ -20,7 +34,7 @@ const VideoScreen = () => {
         <View style={{ backgroundColor: "#141414", flex: 1 }}>
             {/* Video Player */}
             {/* <Image style={styles.videoPlayer} source={{uri: video.thumbnail}}/> */}
-            <VideoPlayer videoURI={video.videoUrl} thumbnailURI={video.thumbnail}/>
+            <VideoPlayer videoURI={video.videoUrl} thumbnailURI={video.thumbnail} />
 
             {/* Video Info */}
             <View style={styles.videoInfoContainer}>
@@ -89,15 +103,24 @@ const VideoScreen = () => {
                 </Text>
             </View>
 
-            <View style={{ padding: 10, marginVertical: 10 }}>
+            <Pressable onPress={openComments} style={{ padding: 10, marginVertical: 10 }}>
                 <Text style={{ color: 'white' }}>Comments 333</Text>
-                <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}>
-                    <Image style={{ width: 35, height: 35, borderRadius: 20 }} source={{ uri: video.user.image }} />
-                    <Text style={{ color: "white", marginLeft: 10 }}>
-                        {video.user.name}
-                    </Text>
-                </View>
-            </View>
+                {comments.length > 0 && <VideoComment videoComment={comments[0]} />}
+                {/* {Comment component} */}
+            </Pressable>
+
+            {/* {All comment} */}
+            <BottomSheetModal 
+                ref={commentsSheetRef} 
+                snapPoints={['70%']} 
+                index={0} 
+                enablePanDownToClose={true}
+                backgroundComponent={({style}) => (
+                    <View style={[style, {backgroundColor: "#4d4d4d"}]} />
+                )}
+            >
+                <VideoComments/>
+            </BottomSheetModal>
         </View>
     )
 }
@@ -105,11 +128,13 @@ const VideoScreen = () => {
 const VideoScreenWithRecommendation = () => {
     return (
         <SafeAreaView style={{ backgroundColor: "#141414", flex: 1 }}>
-            <FlatList
-                data={videos}
-                renderItem={({ item }) => <VideoListItem video={item} />}
-                ListHeaderComponent={VideoScreen}
-            />
+            <BottomSheetModalProvider>
+                <FlatList
+                    data={videos}
+                    renderItem={({ item }) => <VideoListItem video={item} />}
+                    ListHeaderComponent={VideoScreen}
+                />
+            </BottomSheetModalProvider>
         </SafeAreaView>
     );
 };
