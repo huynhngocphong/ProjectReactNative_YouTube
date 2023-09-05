@@ -8,6 +8,7 @@ import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigatorRoutes from './Screen/DrawerNavigationRoutes';
 import BottomTabs from './navigation/BottomTabNavigator';
+import VideoScreen from './screens/VideoScreen/VideoScreen';
 
 const Stack = createStackNavigator();
 
@@ -37,7 +38,8 @@ const App = () => {
         <Stack.Screen name='SplashScreen' component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Auth' component={Auth} options={{ headerShown: false }} />
         {/* <Stack.Screen name='DrawerNavigationRoutes' component={DrawerNavigatorRoutes} options={{ headerShown: false }} /> */}
-        <Stack.Screen name='BottomTabs' component={BottomTabs} options={{ headerShown: false }} />
+        <Stack.Screen name='Root' component={BottomTabs} options={{ headerShown: false }} />
+        <Stack.Screen name='VideoScreen' component={VideoScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
