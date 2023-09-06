@@ -3,22 +3,67 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo'
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 type VideoListItemProps = {
     video: {
+        ////----- Api youtube
+        kind: string;
+        etag: string;
         id: string;
-        createdAt: string;
-        title: string;
-        thumbnail: string;
-        videoUrl: string;
-        duration: number;
-        views: number;
-        user: {
-            name: string;
-            image?: string;
-        }
-    }
+        snippet: {
+            publishedAt: string;
+            channelId: string;
+            title: string;
+            description: string;
+            thumbnails: {
+                default: {
+                    url: string;
+                    width: string;
+                    height: string;
+                };
+                medium: {
+                    url: string;
+                    width: string;
+                    height: string;
+                };
+                high: {
+                    url: string;
+                    width: string;
+                    height: string;
+                };
+                standard: {
+                    url: string;
+                    width: string;
+                    height: string;
+                };
+                maxres: {
+                    url: string;
+                    width: string;
+                    height: string;
+                };
+            };
+            channelTitle: string;
+            tags: [];
+            categoryId: string;
+            liveBroadcastContent: string;
+            // defaultLanguage: string;
+            localized: {
+                title: string;
+                description: string;
+            };
+            defaultAudioLanguage: string;
+        };
+        contentDetails: {
+            duration: string;
+            dimension: string;
+            definition: string;
+            caption: string;
+            licensedContent: string;
+            contentRating: {};
+            projection: string;
+        };
+    },
 }
 
 const VideoListItem = (props: VideoListItemProps) => {
@@ -26,34 +71,39 @@ const VideoListItem = (props: VideoListItemProps) => {
 
     const navigation = useNavigation();
 
-    const minutes = Math.floor(video.duration / 60);
-    const seconds = video.duration % 60
+    var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+    var hours = 0
+    var minutes = 0
+    var seconds = 0
+    var totalseconds = 0
 
-    let viewString = video.views.toString();
-    if (video.views > 1_000_000) {
-        viewString = (video.views / 1_000_000).toFixed(1) + 'm'
-    } else if (video.views > 1_000) {
-        viewString = (video.views / 1_000).toFixed() + 'k'
+    if (reptms.test(video.contentDetails.duration)) {
+      var matches = reptms.exec(video.contentDetails.duration);
+      if (matches) hours = Number(matches[1]);
+      if (matches) minutes = Number(matches[2]);
+      if (matches) seconds = Number(matches[3]);
+      totalseconds = hours * 3600  + minutes * 60 + seconds;
     }
 
     const openVideoPage = () => {
-        navigation.navigate("VideoScreen");
-      };
+        navigation.navigate("VideoScreenWithRecommendation", {item: video});
+        console.log("Phong Open", video.snippet.title)
+    };
 
     return (
         <Pressable onPress={openVideoPage} style={styles.videoCard}>
             <View>
-                <Image style={styles.thumbnail} source={{ uri: video.thumbnail }}></Image>
+                <Image style={styles.thumbnail} source={{ uri: video.snippet.thumbnails.medium.url }}></Image>
                 <View style={styles.timeContainer}>
-                    <Text style={styles.time}>{minutes}:{seconds < 10 ? '0' : ''}{seconds}</Text>
+                    <Text style={styles.time}>{hours.toString() == "NaN" ? '' : hours}{hours.toString() == "NaN" ? '' : ':'}{minutes < 10 ? '0' : ''}{minutes.toString() == "NaN" ? '00' : minutes}:{seconds < 10 ? '0' : ''}{seconds}</Text>
                 </View>
             </View>
 
             <View style={styles.titleRow}>
-                <Image style={styles.avatar} source={{uri: video.user.image}}></Image>
+                <Image style={styles.avatar} source={{ uri: video.snippet.thumbnails.medium.url }}></Image>
                 <View style={styles.midleContainer}>
-                    <Text style={styles.title}>{video.title}</Text>
-                    <Text style={styles.subtitle}>{video.user.name} {viewString} {video.createdAt}</Text>
+                    <Text style={styles.title}>{video.snippet.title}</Text>
+                    <Text style={styles.subtitle}>{video.snippet.channelTitle}</Text>
                 </View>
                 <Icon name="dots-three-vertical" size={18} color="white" />
             </View>
@@ -69,12 +119,12 @@ const styles = StyleSheet.create({
     },
     thumbnail: {
         with: '100%',
-        aspectRatio: 16/9,
+        aspectRatio: 16 / 9,
     },
     timeContainer: {
         backgroundColor: '#00000099',
         height: 25,
-        width: 50,
+        width: 60,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
